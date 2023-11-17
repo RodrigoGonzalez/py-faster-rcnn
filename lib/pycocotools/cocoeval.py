@@ -74,7 +74,7 @@ class COCOeval:
         self._paramsEval = {}               # parameters for evaluation
         self.stats = []                     # result summarization
         self.ious = {}                      # ious between all gts and dts
-        if not cocoGt is None:
+        if cocoGt is not None:
             self.params.imgIds = sorted(cocoGt.getImgIds())
             self.params.catIds = sorted(cocoGt.getCatIds())
 
@@ -172,7 +172,7 @@ class COCOeval:
             return []
         dt = sorted(dt, key=lambda x: -x['score'])
         if len(dt) > p.maxDets[-1]:
-            dt=dt[0:p.maxDets[-1]]
+            dt = dt[:p.maxDets[-1]]
 
         if p.useSegm:
             g = [g['segmentation'] for g in gt]
@@ -183,8 +183,7 @@ class COCOeval:
 
         # compute iou between each dt and gt region
         iscrowd = [int(o['iscrowd']) for o in gt]
-        ious = mask.iou(d,g,iscrowd)
-        return ious
+        return mask.iou(d,g,iscrowd)
 
     def evaluateImg(self, imgId, catId, aRng, maxDet):
         '''

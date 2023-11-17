@@ -172,5 +172,4 @@ def _filter_boxes(boxes, min_size):
     """Remove all boxes with any side smaller than min_size."""
     ws = boxes[:, 2] - boxes[:, 0] + 1
     hs = boxes[:, 3] - boxes[:, 1] + 1
-    keep = np.where((ws >= min_size) & (hs >= min_size))[0]
-    return keep
+    return np.where((ws >= min_size) & (hs >= min_size))[0]

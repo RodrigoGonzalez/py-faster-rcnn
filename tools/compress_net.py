@@ -32,8 +32,7 @@ def parse_args():
         parser.print_help()
         sys.exit(1)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 def compress_weights(W, l):
     """Compress the weight matrix W of an inner product (fully connected) layer

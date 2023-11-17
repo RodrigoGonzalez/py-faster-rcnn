@@ -59,10 +59,8 @@ def _get_image_blob(im):
     im_orig -= cfg.PIXEL_MEANS
 
     im_shape = im_orig.shape
-    im_size_min = np.min(im_shape[0:2])
-    im_size_max = np.max(im_shape[0:2])
-
-    processed_ims = []
+    im_size_min = np.min(im_shape[:2])
+    im_size_max = np.max(im_shape[:2])
 
     assert len(cfg.TEST.SCALES) == 1
     target_size = cfg.TEST.SCALES[0]
@@ -74,8 +72,7 @@ def _get_image_blob(im):
     im = cv2.resize(im_orig, None, None, fx=im_scale, fy=im_scale,
                     interpolation=cv2.INTER_LINEAR)
     im_info = np.hstack((im.shape[:2], im_scale))[np.newaxis, :]
-    processed_ims.append(im)
-
+    processed_ims = [im]
     # Create a blob to hold the input images
     blob = im_list_to_blob(processed_ims)
 

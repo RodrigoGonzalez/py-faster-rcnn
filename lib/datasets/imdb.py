@@ -52,7 +52,7 @@ class imdb(object):
         self._roidb_handler = val
 
     def set_proposal_method(self, method):
-        method = eval('self.' + method + '_roidb')
+        method = eval(f'self.{method}_roidb')
         self.roidb_handler = method
 
     @property
@@ -140,7 +140,7 @@ class imdb(object):
                         [256**2, 512**2],  # 256-512
                         [512**2, 1e5**2],  # 512-inf
                       ]
-        assert areas.has_key(area), 'unknown area range: {}'.format(area)
+        assert areas.has_key(area), f'unknown area range: {area}'
         area_range = area_ranges[areas[area]]
         gt_overlaps = np.zeros(0)
         num_pos = 0

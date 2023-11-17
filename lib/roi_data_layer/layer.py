@@ -57,10 +57,9 @@ class RoIDataLayer(caffe.Layer):
         """
         if cfg.TRAIN.USE_PREFETCH:
             return self._blob_queue.get()
-        else:
-            db_inds = self._get_next_minibatch_inds()
-            minibatch_db = [self._roidb[i] for i in db_inds]
-            return get_minibatch(minibatch_db, self._num_classes)
+        db_inds = self._get_next_minibatch_inds()
+        minibatch_db = [self._roidb[i] for i in db_inds]
+        return get_minibatch(minibatch_db, self._num_classes)
 
     def set_roidb(self, roidb):
         """Set the roidb to be used by this layer during training."""

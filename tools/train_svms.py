@@ -41,7 +41,7 @@ class SVMTrainer(object):
 
         dim = net.params['cls_score'][0].data.shape[1]
         scale = self._get_feature_scale()
-        print('Feature dim: {}'.format(dim))
+        print(f'Feature dim: {dim}')
         print('Feature scale: {:.3f}'.format(scale))
         self.trainers = [SVMClassTrainer(cls, dim, feature_scale=scale)
                          for cls in imdb.classes]
@@ -222,11 +222,10 @@ class SVMClassTrainer(object):
         self.pos_cur += num
 
     def train(self):
-        print('>>> Updating {} detector <<<'.format(self.cls))
+        print(f'>>> Updating {self.cls} detector <<<')
         num_pos = self.pos.shape[0]
         num_neg = self.neg.shape[0]
-        print('Cache holds {} pos examples and {} neg examples'.
-              format(num_pos, num_neg))
+        print(f'Cache holds {num_pos} pos examples and {num_neg} neg examples')
         X = np.vstack((self.pos, self.neg)) * self.feature_scale
         y = np.hstack((np.ones(num_pos),
                        -np.ones(num_neg)))
@@ -252,7 +251,7 @@ class SVMClassTrainer(object):
         scores_ret = (
                 X * 1.0 / self.feature_scale).dot(w.T * self.feature_scale) + b
         assert np.allclose(scores, scores_ret[:, 0], atol=1e-5), \
-                "Scores from returned model don't match decision function"
+                    "Scores from returned model don't match decision function"
 
         return ((w * self.feature_scale, b), pos_scores, neg_scores)
 
@@ -271,10 +270,11 @@ class SVMClassTrainer(object):
                 self.neg = self.neg[not_easy_inds, :]
                 # self.neg = np.delete(self.neg, easy_inds)
             print('    Pruning easy negatives')
-            print('    Cache holds {} pos examples and {} neg examples'.
-                  format(self.pos.shape[0], self.neg.shape[0]))
-            print('    {} pos support vectors'.format((pos_scores <= 1).sum()))
-            print('    {} neg support vectors'.format((neg_scores >= -1).sum()))
+            print(
+                f'    Cache holds {self.pos.shape[0]} pos examples and {self.neg.shape[0]} neg examples'
+            )
+            print(f'    {(pos_scores <= 1).sum()} pos support vectors')
+            print(f'    {(neg_scores >= -1).sum()} neg support vectors')
             return new_w_b
         else:
             return None
@@ -302,8 +302,7 @@ def parse_args():
         parser.print_help()
         sys.exit(1)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 if __name__ == '__main__':
     # Must turn this off to prevent issues when digging into the net blobs to

@@ -54,8 +54,7 @@ def parse_args():
         parser.print_help()
         sys.exit(1)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 def combined_roidb(imdb_names):
     def get_roidb(imdb_name):

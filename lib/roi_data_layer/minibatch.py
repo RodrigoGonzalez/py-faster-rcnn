@@ -19,9 +19,9 @@ def get_minibatch(roidb, num_classes):
     # Sample random scales to use for each image in this batch
     random_scale_inds = npr.randint(0, high=len(cfg.TRAIN.SCALES),
                                     size=num_images)
-    assert(cfg.TRAIN.BATCH_SIZE % num_images == 0), \
-        'num_images ({}) must divide BATCH_SIZE ({})'. \
-        format(num_images, cfg.TRAIN.BATCH_SIZE)
+    assert (
+        cfg.TRAIN.BATCH_SIZE % num_images == 0
+    ), f'num_images ({num_images}) must divide BATCH_SIZE ({cfg.TRAIN.BATCH_SIZE})'
     rois_per_image = cfg.TRAIN.BATCH_SIZE / num_images
     fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image)
 
@@ -150,8 +150,7 @@ def _get_image_blob(roidb, scale_inds):
 
 def _project_im_rois(im_rois, im_scale_factor):
     """Project image RoIs into the rescaled training image."""
-    rois = im_rois * im_scale_factor
-    return rois
+    return im_rois * im_scale_factor
 
 def _get_bbox_regression_labels(bbox_target_data, num_classes):
     """Bounding-box regression targets are stored in a compact form in the

@@ -142,7 +142,7 @@ class COCO:
         if len(imgIds) == len(catIds) == len(areaRng) == 0:
             anns = self.dataset['annotations']
         else:
-            if not len(imgIds) == 0:
+            if len(imgIds) != 0:
                 # this can be changed by defaultdict
                 lists = [self.imgToAnns[imgId] for imgId in imgIds if imgId in self.imgToAnns]
                 anns = list(itertools.chain.from_iterable(lists))
@@ -150,11 +150,11 @@ class COCO:
                 anns = self.dataset['annotations']
             anns = anns if len(catIds)  == 0 else [ann for ann in anns if ann['category_id'] in catIds]
             anns = anns if len(areaRng) == 0 else [ann for ann in anns if ann['area'] > areaRng[0] and ann['area'] < areaRng[1]]
-        if not iscrowd == None:
-            ids = [ann['id'] for ann in anns if ann['iscrowd'] == iscrowd]
-        else:
-            ids = [ann['id'] for ann in anns]
-        return ids
+        return (
+            [ann['id'] for ann in anns if ann['iscrowd'] == iscrowd]
+            if iscrowd is not None
+            else [ann['id'] for ann in anns]
+        )
 
     def getCatIds(self, catNms=[], supNms=[], catIds=[]):
         """
@@ -168,15 +168,12 @@ class COCO:
         supNms = supNms if type(supNms) == list else [supNms]
         catIds = catIds if type(catIds) == list else [catIds]
 
-        if len(catNms) == len(supNms) == len(catIds) == 0:
-            cats = self.dataset['categories']
-        else:
-            cats = self.dataset['categories']
+        cats = self.dataset['categories']
+        if not len(catNms) == len(supNms) == len(catIds) == 0:
             cats = cats if len(catNms) == 0 else [cat for cat in cats if cat['name']          in catNms]
             cats = cats if len(supNms) == 0 else [cat for cat in cats if cat['supercategory'] in supNms]
             cats = cats if len(catIds) == 0 else [cat for cat in cats if cat['id']            in catIds]
-        ids = [cat['id'] for cat in cats]
-        return ids
+        return [cat['id'] for cat in cats]
 
     def getImgIds(self, imgIds=[], catIds=[]):
         '''

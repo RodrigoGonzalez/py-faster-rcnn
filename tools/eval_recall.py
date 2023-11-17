@@ -25,8 +25,7 @@ def parse_args():
         parser.print_help()
         sys.exit(1)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()

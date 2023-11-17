@@ -44,7 +44,7 @@ def _filter_crowd_proposals(roidb, crowd_thresh):
 
 class coco(imdb):
     def __init__(self, image_set, year):
-        imdb.__init__(self, 'coco_' + year + '_' + image_set)
+        imdb.__init__(self, f'coco_{year}_{image_set}')
         # COCO specific config options
         self.config = {'top_k' : 2000,
                        'use_salt' : True,
@@ -84,21 +84,22 @@ class coco(imdb):
 
     def _get_ann_file(self):
         prefix = 'instances' if self._image_set.find('test') == -1 \
-                             else 'image_info'
-        return osp.join(self._data_path, 'annotations',
-                        prefix + '_' + self._image_set + self._year + '.json')
+                                 else 'image_info'
+        return osp.join(
+            self._data_path,
+            'annotations',
+            f'{prefix}_{self._image_set}{self._year}.json',
+        )
 
     def _load_image_set_index(self):
         """
         Load image ids.
         """
-        image_ids = self._COCO.getImgIds()
-        return image_ids
+        return self._COCO.getImgIds()
 
     def _get_widths(self):
         anns = self._COCO.loadImgs(self._image_index)
-        widths = [ann['width'] for ann in anns]
-        return widths
+        return [ann['width'] for ann in anns]
 
     def image_path_at(self, i):
         """
@@ -112,12 +113,10 @@ class coco(imdb):
         """
         # Example image path for index=119993:
         #   images/train2014/COCO_train2014_000000119993.jpg
-        file_name = ('COCO_' + self._data_name + '_' +
-                     str(index).zfill(12) + '.jpg')
+        file_name = f'COCO_{self._data_name}_{str(index).zfill(12)}.jpg'
         image_path = osp.join(self._data_path, 'images',
                               self._data_name, file_name)
-        assert osp.exists(image_path), \
-                'Path does not exist: {}'.format(image_path)
+        assert osp.exists(image_path), f'Path does not exist: {image_path}'
         return image_path
 
     def selective_search_roidb(self):
@@ -284,8 +283,7 @@ class coco(imdb):
     def _get_box_file(self, index):
         # first 14 chars / first 22 chars / all chars + .mat
         # COCO_val2014_0/COCO_val2014_000000447/COCO_val2014_000000447991.mat
-        file_name = ('COCO_' + self._data_name +
-                     '_' + str(index).zfill(12) + '.mat')
+        file_name = f'COCO_{self._data_name}_{str(index).zfill(12)}.mat'
         return osp.join(file_name[:14], file_name[:22], file_name)
 
     def _print_detection_eval_metrics(self, coco_eval):
@@ -375,7 +373,7 @@ class coco(imdb):
                                          self._year +
                                          '_results'))
         if self.config['use_salt']:
-            res_file += '_{}'.format(str(uuid.uuid4()))
+            res_file += f'_{str(uuid.uuid4())}'
         res_file += '.json'
         self._write_coco_results_file(all_boxes, res_file)
         # Only do evaluation on non-test sets

@@ -108,9 +108,7 @@ def parse_args():
     parser.add_argument('--net', dest='demo_net', help='Network to use [vgg16]',
                         choices=NETS.keys(), default='vgg16')
 
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 if __name__ == '__main__':
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals

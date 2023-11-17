@@ -54,8 +54,7 @@ def parse_args():
         parser.print_help()
         sys.exit(1)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
@@ -74,7 +73,7 @@ if __name__ == '__main__':
     pprint.pprint(cfg)
 
     while not os.path.exists(args.caffemodel) and args.wait:
-        print('Waiting for {} to exist...'.format(args.caffemodel))
+        print(f'Waiting for {args.caffemodel} to exist...')
         time.sleep(10)
 
     caffe.set_mode_gpu()
